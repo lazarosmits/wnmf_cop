@@ -84,4 +84,5 @@ plt.yticks([0,50,100],[0,0.5,1])
 ````
 
 Now let's visualize the results from NMF
+
 <img src="https://github.com/user-attachments/assets/109682db-f351-4577-964d-0de071d13491" width="550">
