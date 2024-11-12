@@ -46,4 +46,4 @@ cop_dens2= gaussian_filter(cop2_hist, sigma=2, mode='mirror').flatten()
 
 A schematic of the toy dataset along with the copula densities within looks like this
 
-<img src="https://github.com/user-attachments/assets/e2a90d93-a081-44d9-9333-701a7ab8714d" width="250">
+<img src="https://github.com/user-attachments/assets/e2a90d93-a081-44d9-9333-701a7ab8714d" width="500">
