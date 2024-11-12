@@ -6,13 +6,13 @@ The code implements a modified version of the classic non-negative matrix factor
 
 This weighting approach is especially useful for dimensionality reduction on datasets with overlapping features, such as bivariate (2D) copulas, where standard NMF struggles to separate distinct features related to copula density functions. However, WNMF is versatile and can be applied to other cases where overlapping features require dimensionality reduction, such as image or time series data.
 
-The code below provides an example of WNMF usage with synthetic copula data similar to the setup in Mitskopoulos and Onken (2023). To construct these synthetic copula data I used the [mixed vines package](https://github.com/asnelt/mixedvines?tab=readme-ov-file), by [Onken and Panzeri (2016)](https://proceedings.neurips.cc/paper_files/paper/2016/hash/fb89705ae6d743bf1e848c206e16a1d7-Abstract.html)
+Below are some code snippets to provides an example of WNMF usage with synthetic copula data similar to the setup in Mitskopoulos and Onken (2023). You can view and run the full version in the file `test_cop_wnmf.py`. To construct these synthetic copula data I used the [mixed vines package](https://github.com/asnelt/mixedvines?tab=readme-ov-file), by [Onken and Panzeri (2016)](https://proceedings.neurips.cc/paper_files/paper/2016/hash/fb89705ae6d743bf1e848c206e16a1d7-Abstract.html)
 
 
 # Feature discovery for 2D copulas with NMF
-Suppose you are given a dataset and you want to deploy copulas to describe the statistical relationships between pairs of the variables in that dataset. Copulas are statistical tools which are very useful for exactly that purpose, capturing the shape of these statistical relationships. For pairs of variables we have bivariate, that is 2D copulas, and these copulas are essentially probability distributions, so the object of interest here which NMF is applied to is 2D density plots.
+Suppose you have a dataset and want to use copulas to describe statistical relationships between pairs of its variables. Copulas are statistical tools designed for this purpose, as they capture the shape of these relationships. Specifically, for pairs of variables, we use bivariate (2D) copulas, which represent probability distributions. Here, our object of interest—on which we’ll apply NMF—is a set of 2D density plots.
 
-Let's make a toy dataset consisting of 2 distinct types of copulas, called Frank and Clayton copulas. And let's make 20 instances for each of the 2 types, where in each of the instances the value of the theta parameter in Frank and Clayton copulas is picked randomly from a range of values. We are going to start with the easy case where the tail regions in the copulas, i.e. the values in the corners of the density, don't overlap.
+To illustrate, let’s create a toy dataset with two distinct types of copulas: Frank and Clayton. We’ll generate 20 instances of each type, randomly selecting the `theta` parameter for each copula from a specified range of values. For now, we’ll start with a straightforward case where the tail regions of the copulas (i.e., values in the density plot corners) don’t overlap.
 
 ```python
 import numpy as np
@@ -47,3 +47,41 @@ cop_dens2= gaussian_filter(cop2_hist, sigma=2, mode='mirror').flatten()
 A schematic of the toy dataset along with the copula densities within looks like this
 
 <img src="https://github.com/user-attachments/assets/e2a90d93-a081-44d9-9333-701a7ab8714d" width="500">
+
+
+Now let's apply NMF with 2 factors on these data.
+
+```python
+# deploy standard NMF with 2 factors
+n_fac=2
+nmf_cop = NMF(n_components=n_fac)
+# extract W coefficients that show which rows of H correspond 
+# to which copula module/feature
+W = nmf_cop.fit_transform(cop_dens)
+# extract H copula modules/features
+H = nmf_cop.components_
+
+# plot results
+plt.figure()
+plt.subplot(2,2,1)
+plt.bar(np.arange(W.shape[0]),W[:,0])
+plt.title('W coefficients')
+plt.ylabel('Factor 1')
+plt.subplot(2,2,2)
+plt.pcolor(H[0,:].reshape(100,100))
+plt.title('H Copula modules')
+plt.xticks([0,50,100],[0,0.5,1])
+plt.yticks([0,50,100],[0,0.5,1])
+plt.subplot(2,2,3)
+plt.bar(np.arange(W.shape[0]),W[:,1])
+plt.ylabel('Factor 2')
+plt.xlabel('Artificial copula index')
+plt.subplot(2,2,4)
+plt.pcolor(H[1,:].reshape(100,100))
+plt.xticks([0,50,100],[0,0.5,1])
+plt.yticks([0,50,100],[0,0.5,1])
+
+````
+
+Now let's visualize the results from NMF
+<img src="https://github.com/user-attachments/assets/109682db-f351-4577-964d-0de071d13491" width="500">
