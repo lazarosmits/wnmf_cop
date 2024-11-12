@@ -10,7 +10,7 @@ Below are some code snippets to provides an example of WNMF usage with synthetic
 
 
 # Feature discovery for 2D copulas with NMF
-Suppose you have a dataset and want to use copulas to describe statistical relationships between pairs of its variables. Copulas are statistical tools designed for this purpose, as they capture the shape of these relationships. Specifically, for pairs of variables, we use bivariate (2D) copulas, which represent probability distributions. Here, our object of interest—on which we’ll apply NMF—is a set of 2D density plots.
+Suppose you have a dataset and want to use copulas to describe statistical relationships between pairs of its variables. Copulas are statistical tools designed for this purpose, as they capture the shape of these relationships. Specifically, for pairs of variables, we use bivariate (2D) copulas, which represent probability distributions. Here, our object of interest—on which we’ll apply NMF—is a set of 2D density plots. The rationale for applying NMF is that, in large datasets, we often want to distill the most important features that might be hard to discern among numerous data points.
 
 To illustrate, let’s create a toy dataset with two distinct types of copulas: Frank and Clayton. We’ll generate 20 instances of each type, randomly selecting the `theta` parameter for each copula from a specified range of values. For now, we’ll start with a straightforward case where the tail regions of the copulas (i.e., values in the density plot corners) don’t overlap.
 
@@ -83,6 +83,13 @@ plt.yticks([0,50,100],[0,0.5,1])
 
 ````
 
-Now let's visualize the results from NMF
+As is obvious in the following visualization, NMF does a good job of discovering the copula shapes
 
 <img src="https://github.com/user-attachments/assets/109682db-f351-4577-964d-0de071d13491" width="550">
+
+
+# Feature discovery for 2D copulas with overlapping tail regions
+
+
+
+
