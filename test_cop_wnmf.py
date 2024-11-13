@@ -43,6 +43,7 @@ cop_dens2= gaussian_filter(cop2_hist, sigma=2, mode='mirror').flatten()
 
 # plot the densities for the synthetic data
 plt.figure()
+plt.rc('font',size=16)
 plt.subplot(1,2,1)
 plt.pcolor(cop_dens1.reshape(size,size))
 plt.title('Symmetric, light tailed')
@@ -82,7 +83,7 @@ for i in range(n_reps):
     cop_hist= np.histogram2d(frank_samps[i,:,0],frank_samps[i,:,1],
                              bins=[np.linspace(0,1,size+1),
                                    np.linspace(0,1,size+1)])[0]
-    cop_dens[i,:]= gaussian_filter(cop_hist, sigma=2, mode='mirror').flatten()
+    cop_dens[i,:]= gaussian_filter(cop_hist, sigma=4, mode='mirror').flatten()
     cop_dens[i,:]=cop_dens[i,:]/np.sum(cop_dens[i,:])
     
     if i<len(c_theta):
@@ -143,7 +144,7 @@ for i in range(n_reps):
     cop_hist= np.histogram2d(frank_samps[i,:,0],frank_samps[i,:,1],
                              bins=[np.linspace(0,1,size+1),
                                    np.linspace(0,1,size+1)])[0]
-    cop_dens[i,:]= gaussian_filter(cop_hist, sigma=2, mode='mirror').flatten()
+    cop_dens[i,:]= gaussian_filter(cop_hist, sigma=4, mode='mirror').flatten()
     cop_dens[i,:]=cop_dens[i,:]/np.sum(cop_dens[i,:])
     
     if i<len(c_theta):
@@ -155,6 +156,24 @@ for i in range(n_reps):
                                         np.linspace(0,1,size+1)])[0]
         cop_dens[i+n_reps,:]= gaussian_filter(cop_hist, sigma=2, mode='mirror').flatten()
         cop_dens[i+n_reps,:]=cop_dens[i+n_reps,:]/np.sum(cop_dens[i+n_reps,:])
+        
+# visualize overlapping synthetic copula data
+plt.figure()
+plt.rc('font',size=16)
+plt.subplot(1,2,1)
+plt.pcolor(cop_dens[0,:].reshape(size,size))
+plt.title('Symmetric, light tailed')
+plt.xlabel('Variable x')
+plt.ylabel('Variable y')
+plt.xticks([0,50,100],[0,0.5,1])
+plt.yticks([0,50,100],[0,0.5,1])
+plt.subplot(1,2,2)
+plt.pcolor(cop_dens[20,:].reshape(size,size))
+plt.title('Asymmetric, heavy tailed')
+plt.xlabel('Variable x')
+plt.ylabel('Variable y')
+plt.xticks([0,50,100],[0,0.5,1])
+plt.yticks([0,50,100],[0,0.5,1])
         
 #%% Unweighted NMF fails to extract true copulas for overlapping tails
 
@@ -218,7 +237,7 @@ plt.title('ICDF Weight matrix')
 err_mat=np.tile(rot_op, cop_dens.shape[0]).reshape(cop_dens.shape[0],-1)
 
 #%% Deploy Weighted NMF
-W,H,err_ao=wnmf(cop_dens.T,k=n_fac,
+W,H,err=wnmf(cop_dens.T,k=n_fac,
                           Wght=err_mat.T)
 
 # plot results
@@ -242,7 +261,7 @@ plt.xticks([0,50,100],[0,0.5,1])
 plt.yticks([0,50,100],[0,0.5,1])
 #%% Deploy Weighted NMF with L1 regularization on W
 
-W,H,err_ao=wnmf(cop_dens.T,k=n_fac,
+W,H,err=wnmf(cop_dens.T,k=n_fac,
                           Wght=err_mat.T,l1_reg_W=0.7)
 
 # plot results
