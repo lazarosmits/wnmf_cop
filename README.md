@@ -138,6 +138,67 @@ Let's see how the weight matrix looks like.
 <img src="https://github.com/user-attachments/assets/5584ba26-7fb9-407b-8edf-28e3952e70a9" width="350">
 
 
+Now let's apply WNMF and visualise the results.
+
+```python
+W,H,err=wnmf(cop_dens.T,k=n_fac,
+                          Wght=err_mat.T)
+
+# plot results
+plt.figure()
+plt.subplot(2,2,1)
+plt.bar(np.arange(W.shape[0]),W[:,0])
+plt.title('W coefficients')
+plt.ylabel('Factor 1')
+plt.subplot(2,2,2)
+plt.pcolor(H[0,:].reshape(100,100))
+plt.title('H Copula modules')
+plt.xticks([0,50,100],[0,0.5,1])
+plt.yticks([0,50,100],[0,0.5,1])
+plt.subplot(2,2,3)
+plt.bar(np.arange(W.shape[0]),W[:,1])
+plt.ylabel('Factor 2')
+plt.xlabel('Artificial copula index')
+plt.subplot(2,2,4)
+plt.pcolor(H[1,:].reshape(100,100))
+plt.xticks([0,50,100],[0,0.5,1])
+plt.yticks([0,50,100],[0,0.5,1])
+```
+
+<img src="https://github.com/user-attachments/assets/c716fb87-c624-453d-bc71-aa13f71e3206" width="550">
+
+Notice how more well separated the copula shapes look with WNMF compared to standard NMF. There still is, however, a slight trace of the Clayton copula on the Frank copula factor, so there is more room for improvement. We can do that by adding L1 regularization to the `W` coefficients as this will push them towards lower values and thus promote less mixing of the features which equals more separation.
+
+```python
+W,H,err=wnmf(cop_dens.T,k=n_fac,
+                          Wght=err_mat.T,l1_reg_W=0.7)
+
+# plot results
+plt.figure()
+plt.subplot(2,2,1)
+plt.bar(np.arange(W.shape[0]),W[:,0])
+plt.title('W coefficients')
+plt.ylabel('Factor 1')
+plt.subplot(2,2,2)
+plt.pcolor(H[0,:].reshape(100,100))
+plt.title('H Copula modules')
+plt.xticks([0,50,100],[0,0.5,1])
+plt.yticks([0,50,100],[0,0.5,1])
+plt.subplot(2,2,3)
+plt.bar(np.arange(W.shape[0]),W[:,1])
+plt.ylabel('Factor 2')
+plt.xlabel('Artificial copula index')
+plt.subplot(2,2,4)
+plt.pcolor(H[1,:].reshape(100,100))
+plt.xticks([0,50,100],[0,0.5,1])
+plt.yticks([0,50,100],[0,0.5,1])
+```
+
+Upon visualising the results from regularized WNMF, we can see how this has led to even further improvement.
+
+<img src="https://github.com/user-attachments/assets/edcb93ed-08d1-4834-af57-197c72d6ee11" width="550">
+
+
 
 
 
