@@ -90,6 +90,18 @@ As is obvious in the following visualization, NMF does a good job of discovering
 
 # Feature discovery for 2D copulas with overlapping tail regions
 
+In the previous example, I deliberately rotated the Frank copulas by 90° so that the shapes do not overlap in the tail regions, which is where a lot of probability mass is concentrated for the Clayton copulas. Things are not as easy, however, if the copula shapes in question have significant overlap as is the case in the following scenario. 
+
+<img src="https://github.com/user-attachments/assets/bec6fdbb-41ca-4e8b-b55a-aac35805415b" width="550">
+
+Cases like this can be quite common in real data. If we apply standard NMF in this case, the outcome can be seen in the following figure, where there the features of the shapes are not well separated in the `H` factors.
+
+<img src="https://github.com/user-attachments/assets/b9f5574b-9b6a-4920-8060-b40faa14b2bc" width="550">
+
+
+
+
+
 
 
 
